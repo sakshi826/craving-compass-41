@@ -1,12 +1,28 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from 'react';
+import TopBar from '@/components/TopBar';
+import LogCard from '@/components/LogCard';
+import UrgeTimer from '@/components/UrgeTimer';
+import TodaySnapshot from '@/components/TodaySnapshot';
+import RecentEntries from '@/components/RecentEntries';
+import HistoryDrawer from '@/components/HistoryDrawer';
+import { useCravingLogs } from '@/hooks/useCravingLogs';
 
 const Index = () => {
+  const { logs, addLog, removeLog, todayLogs } = useCravingLogs();
+  const [historyOpen, setHistoryOpen] = useState(false);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <TopBar onHistoryOpen={() => setHistoryOpen(true)} />
+
+      <main className="max-w-[430px] mx-auto px-4 py-4 pb-20 space-y-3">
+        <LogCard onSave={addLog} />
+        <UrgeTimer />
+        <TodaySnapshot todayLogs={todayLogs} />
+        <RecentEntries logs={logs} onRemove={removeLog} onViewAll={() => setHistoryOpen(true)} />
+      </main>
+
+      <HistoryDrawer open={historyOpen} onClose={() => setHistoryOpen(false)} logs={logs} onRemove={removeLog} />
     </div>
   );
 };
